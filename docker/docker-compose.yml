@@ -8,8 +8,8 @@ networks:
 
 services:
   anything-llm:
-    container_name: anything-llm
-    image: anything-llm:latest
+    container_name: anythingllm-inhand
+    image: anythingllm-inhand:v0.2
     build:
       context: ../.
       dockerfile: ./docker/Dockerfile
