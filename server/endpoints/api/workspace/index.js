@@ -564,7 +564,8 @@ function apiWorkspaceEndpoints(app) {
          "application/json": {
            example: {
              message: "What is AnythingLLM?",
-             mode: "query | chat"
+             mode: "query | chat",
+             act_as: "username"
            }
          }
        }
@@ -612,7 +613,7 @@ function apiWorkspaceEndpoints(app) {
    */
       try {
         const { slug } = request.params;
-        const { message, mode = "query" } = reqBody(request);
+        const { message, mode = "query", act_as = null } = reqBody(request);
         const workspace = await Workspace.get({ slug });
 
         if (!workspace) {
@@ -641,13 +642,29 @@ function apiWorkspaceEndpoints(app) {
           return;
         }
 
+        
+        // Reuben: act as the specified user.
+        const user = act_as ? await User.get({ username: act_as }) : null;
+        if (act_as && !user) {
+          response.status(400).json({
+            id: uuidv4(),
+            type: "abort",
+            textResponse: null,
+            sources: [],
+            close: true,
+            error: `User ${act_as} does not exist.`,
+          });
+          return;
+        }
+
         response.setHeader("Cache-Control", "no-cache");
         response.setHeader("Content-Type", "text/event-stream");
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Connection", "keep-alive");
-        response.flushHeaders();
+        response.flushHeaders();     
 
-        await streamChatWithWorkspace(response, workspace, message, mode);
+
+        await streamChatWithWorkspace(response, workspace, message, mode, user);
         await Telemetry.sendTelemetry("sent_chat", {
           LLMSelection: process.env.LLM_PROVIDER || "openai",
           Embedder: process.env.EMBEDDING_ENGINE || "inherit",
