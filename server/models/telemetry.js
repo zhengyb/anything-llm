@@ -3,7 +3,16 @@ const { SystemSettings } = require("./systemSettings");
 
 const Telemetry = {
   // Write-only key. It can't read events or any of your other data, so it's safe to use in public apps.
-  pubkey: "phc_9qu7QLpV8L84P3vFmEiZxL020t2EqIubP7HHHxrSsqS",
+  //pubkey: "phc_9qu7QLpV8L84P3vFmEiZxL020t2EqIubP7HHHxrSsqS",
+  /*
+  import { PostHog } from 'posthog-node'
+
+  const client = new PostHog(
+      'phc_wXcW1QnANTUuJuxWgCIRdjq8c1NeOgqaKYt6W48DeUu',
+      { host: 'https://us.posthog.com' }
+  )
+   */
+  pubkey: "phc_wXcW1QnANTUuJuxWgCIRdjq8c1NeOgqaKYt6W48DeUu",
   stubDevelopmentEvents: true, // [DO NOT TOUCH] Core team only.
   label: "telemetry_id",
 

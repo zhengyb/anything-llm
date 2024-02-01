@@ -42,7 +42,7 @@ const Document = {
     const errors = new Set();
 
     for (const path of additions) {
-      const data = await fileData(path);
+      const data = await fileData(path); // read the json format file
       if (!data) continue;
 
       const docId = uuidv4();
